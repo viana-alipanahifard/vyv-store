@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}سبد خرید | vVyana's shop{% endblock %}
+
+{% block extra_css %}
+<style>
+  :root{
+    --maroon:#611C1C; --rose:#B08D83; --peach:#FFE8E0;
+  }
+  .cart-card{
+    border-radius:1.25rem;
+    border:1px solid rgba(97,28,28,.12);
+    box-shadow:0 14px 34px rgba(97,28,28,.10);
+  }
+  .cart-head{
+    background: linear-gradient(135deg, var(--peach), #fff);
+    border-top-left-radius:1.25rem !important;
+    border-top-right-radius:1.25rem !important;
+  }
+  .cart-title{ color:var(--maroon); }
+  .table thead th{
+    background: var(--maroon);
+    color:#fff;
+    border:0;
+    white-space:nowrap;
+  }
+  .table tbody tr:hover{ background: rgba(97,28,28,.05); }
+  .qty-controls .btn{ padding:.2rem .5rem; border-radius:.75rem; }
+  .btn-maroon{
+    --bs-btn-bg: var(--maroon);
+    --bs-btn-border-color: var(--maroon);
+    --bs-btn-hover-bg:#4e1616;
+    --bs-btn-hover-border-color:#4e1616;
+    --bs-btn-color:#fff;
+    border-radius:.9rem;
+  }
+  .btn-outline-maroon{
+    --bs-btn-color: var(--maroon);
+    --bs-btn-border-color: var(--maroon);
+    --bs-btn-hover-bg: var(--maroon);
+    --bs-btn-hover-border-color: var(--maroon);
+    --bs-btn-hover-color:#fff;
+    border-radius:.9rem;
+  }
+  .total{
+    color:var(--maroon);
+    font-weight:900;
+    letter-spacing:.2px;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-4 my-md-5">
+  <div class="card cart-card">
+    <div class="card-header text-center cart-head">
+      <h2 class="h5 fw-bold cart-title">سبد خرید شما</h2>
+    </div>
+
+    <div class="card-body">
+      {% if cart and cart|length > 0 %}
+        <div class="table-responsive">
+          <table class="table align-middle text-center mb-0">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">نام محصول</th>
+                <th scope="col">تعداد</th>
+                <th scope="col">قیمت واحد</th>
+                <th scope="col">قیمت کل</th>
+                <th scope="col">حذف</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in cart %}
+              <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td class="fw-semibold">{{ item.product }}</td>
+                <td>
+                  <div class="d-inline-flex align-items-center qty-controls">
+                    <a href="{% url 'orders:cart_remove' item.product.id %}" class="btn btn-outline-maroon btn-sm">−</a>
+                    <span class="mx-2">{{ item.quantity }}</span>
+                    <a href="{% url 'orders:cart_increase' item.product.id %}" class="btn btn-outline-maroon btn-sm">+</a>
+                  </div>
+                </td>
+                <td class="text-nowrap">{{ item.price }} <span class="text-muted">تومان</span></td>
+                <td class="text-nowrap fw-bold total">{{ item.total_price }} <span class="text-muted">تومان</span></td>
+                <td>
+                  <a href="{% url 'orders:cart_delete' item.product.id %}" class="btn btn-link text-danger p-0">حذف</a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center border-top pt-3 mt-3">
+          <span class="fw-semibold text-muted">جمع کل</span>
+          <span class="total">{{ cart.get_total_price }} <span class="text-muted fw-semibold" style="font-size:.95rem;">تومان</span></span>
+        </div>
+      {% else %}
+        <div class="alert alert-light border text-center mb-0">
+          سبد خرید خالی است.
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="card-footer text-center bg-transparent">
+      <div class="d-flex justify-content-center gap-2">
+        <a href="{% url 'home:home' %}" class="btn btn-outline-maroon px-4">ادامه خرید</a>
+        <a href="{% url 'orders:order_create' %}" class="btn btn-maroon px-4">پرداخت نهایی</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

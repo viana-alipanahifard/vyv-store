@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load static humanize %}
+
+{% block title %}خانه | vVyana's shop{% endblock %}
+
+{% block extra_css %}
+<style>
+  :root{ --maroon:#611C1C; --rose:#B08D83; --peach:#FFE8E0; }
+
+  /* هدر بخش محصولات */
+  .home-hero{
+    background: linear-gradient(135deg, var(--peach), #fff);
+    border: 1px solid rgba(97,28,28,.12);
+    border-radius: 1rem;
+    padding: .75rem 1rem;
+    margin-bottom: 1rem;
+  }
+
+  /* چیپ‌های دسته‌بندی */
+  .cat-chip.btn{
+    color:#2b2b2b; background:#fff;
+    border:1px solid rgba(97,28,28,.20);
+    padding:.35rem .7rem; border-radius:999px; white-space:nowrap; line-height:1.1;
+    transition: background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .cat-chip.btn:hover{ background:rgba(97,28,28,.08); color:var(--maroon); border-color:rgba(97,28,28,.35); }
+  .cat-chip--solid{ background:var(--maroon); border-color:var(--maroon); color:#fff; }
+  .cat-chip--solid:hover{ background:#4e1616; border-color:#4e1616; color:#fff; }
+
+  /* Dropdown راست‌چسب و نرم */
+  .chip-group{ gap:.25rem; }
+  .chip-group .dropdown-toggle-split{ padding:.35rem .5rem; border-radius:999px; }
+  .chip-group .dropdown-menu{
+    min-width:12rem; text-align:right; z-index:1060;
+    border:1px solid rgba(97,28,28,.15); border-radius:.75rem;
+    box-shadow:0 12px 26px rgba(97,28,28,.12);
+    animation: dd-fade .14s ease;
+  }
+  .categories-scroller{ overflow:visible; }
+  @keyframes dd-fade{ from{opacity:0; transform:translateY(-6px);} to{opacity:1; transform:translateY(0);} }
+
+  /* کارت محصول */
+  .card{ border:1px solid rgba(0,0,0,.06); border-radius:1rem; transition:transform .18s, box-shadow .18s; }
+  .card:hover{ transform:translateY(-2px); box-shadow:0 12px 26px rgba(97,28,28,.12); }
+  .product-title{ color:var(--maroon); font-weight:700; font-size:1rem; }
+
+  /* قیمت با humanize */
+  .price-tag{ color:var(--maroon); font-weight:800; letter-spacing:.2px; }
+  .price-tag .num{ font-variant-numeric: tabular-nums; letter-spacing:.2px; }
+  .price-tag .unit{ color:#6c757d; font-weight:600; font-size:.9rem; margin-right:.25rem; }
+
+  .btn-outline-maroon{
+    --bs-btn-color:var(--maroon); --bs-btn-border-color:var(--maroon);
+    --bs-btn-hover-bg:var(--maroon); --bs-btn-hover-border-color:var(--maroon); --bs-btn-hover-color:#fff;
+    border-radius:.7rem;
+  }
+
+  .prod-img{ width:100%; height:180px; object-fit:contain; border-radius:.75rem; background:#fff; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+  <div class="home-hero text-center">
+    <h1 class="fs-5 fw-bold m-0" style="color:var(--maroon);">محصولات</h1>
+  </div>
+
+  <!-- دسته‌بندی‌ها با dropdown راست -->
+  <div class="categories-scroller d-flex flex-wrap gap-2 justify-content-center mb-4">
+    {% for category in categories %}
+      {% with category.slug|default:category.name|slugify as slug %}
+        <div class="btn-group chip-group flex-row-reverse">
+          {% if category.scategory.all %}
+            <button type="button"
+                    class="btn cat-chip dropdown-toggle dropdown-toggle-split"
+                    data-bs-toggle="dropdown" data-bs-auto-close="true" data-bs-display="static"
+                    aria-expanded="false">
+              <span class="visually-hidden">زیرمجموعه‌ها</span>
+            </button>
+          {% endif %}
+          <a href="{{ category.get_absolute_url }}"
+             class="btn cat-chip {% if slug == 'phone' or slug == 'mobile' or slug == 'laptop' %}cat-chip--solid{% endif %}">
+            {{ category.name }}
+          </a>
+          {% if category.scategory.all %}
+            <ul class="dropdown-menu dropdown-menu-start">
+              {% for sub in category.scategory.all %}
+                <li><a class="dropdown-item py-2" href="{{ sub.get_absolute_url }}">{{ sub.name }}</a></li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      {% endwith %}
+    {% empty %}
+      <span class="text-muted">دسته‌بندی ثبت نشده.</span>
+    {% endfor %}
+  </div>
+
+  <!-- محصولات -->
+  <div class="row g-3 justify-content-center">
+    {% for product in products %}
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <div class="card h-100">
+          <a href="{{ product.get_absolute_url }}" class="p-3 d-block">
+            {% if product.image %}
+              <img src="{{ product.image.url }}" alt="{{ product.name }}" class="prod-img">
+            {% else %}
+              <img src="{% static 'img/placeholder.png' %}" alt="{{ product.name }}" class="prod-img">
+            {% endif %}
+          </a>
+          <div class="card-body text-center pt-0">
+            <a href="{{ product.get_absolute_url }}" class="product-title d-inline-block">{{ product.name }}</a>
+            <div class="mt-2 price-tag">
+              <span class="num" dir="ltr">{{ product.price|floatformat:0|intcomma }}</span>
+              <span class="unit">تومان</span>
+            </div>
+          </div>
+          <div class="card-footer bg-transparent border-0 text-center pb-3">
+            <a href="{{ product.get_absolute_url }}" class="btn btn-outline-maroon btn-sm px-3">مشاهده محصول</a>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12">
+        <div class="alert alert-light border text-center">محصولی ثبت نشده.</div>
+      </div>
+    {% endfor %}
+  </div>
+
+{% endblock content %}

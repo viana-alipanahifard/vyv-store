@@ -1,0 +1,97 @@
+{# templates/inc/navbar.html #}
+<style>
+  :root{
+    --maroon:#611C1C; 
+    --coffee:#58372D;
+    --blush:#B08D83;
+    --peach:#FFE8E0;
+    --sand: #C9ACAC;
+    
+  }
+  .navbar-maroon{
+    background: var(--sand) !important;
+    border-bottom: 1px solid rgba(97,28,28,.15);
+  }
+  .navbar-maroon .navbar-brand{ color: var(--maroon) !important; }
+  .navbar-maroon .nav-link{
+    color: var(--maroon) !important;
+    padding:.35rem .55rem;
+    border-radius:.5rem;
+  }
+  .navbar-maroon .nav-link.active,
+  .navbar-maroon .nav-link:hover{
+    color: var(--maroon) !important;
+    background: rgba(97,28,28,.08);
+  }
+  .btn-cart{
+    background:#fff; border-color: rgba(97,28,28,.25);
+  }
+  .badge-maroon{ background: var(--maroon) !important; }
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-light navbar-maroon py-1">
+  <div class="container d-flex align-items-center justify-content-between">
+
+    <!-- برند -->
+    <a class="navbar-brand fw-bold order-lg-1" href="{% url 'home:home' %}">vVyana's shop</a>
+
+    <!-- دکمه منو برای موبایل -->
+    <button class="navbar-toggler order-lg-2" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- منوی اصلی -->
+    <div class="collapse navbar-collapse order-lg-2" id="mainNav">
+      <ul class="navbar-nav align-items-center gap-1">
+        {% if request.user.is_admin %}
+        <li class="nav-item">
+          <a class="nav-link{% if request.resolver_match.url_name == 'bucket' %} active{% endif %}"
+             href="{% url 'home:bucket' %}">باکت</a>
+        </li>
+        {% endif %}
+      </ul>
+
+      <!-- نسخه موبایلِ پکِ چپ (داخل منو) -->
+      <ul class="navbar-nav align-items-center gap-1 d-lg-none mt-2">
+        <li class="nav-item">
+          <a href="{% url 'orders:cart' %}"
+             class="btn btn-light btn-sm btn-cart position-relative px-2 py-1 rounded-pill" aria-label="سبد خرید">
+            🛒
+            {% if cart and cart|length > 0 %}
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-maroon">
+                {{ cart|length }}
+              </span>
+            {% endif %}
+          </a>
+        </li>
+        {% if request.user.is_authenticated %}
+          <li class="nav-item"><a class="nav-link px-2 py-1" href="{% url 'accounts:user_logout' %}">خروج</a></li>
+        {% else %}
+          <li class="nav-item"><a class="nav-link px-2 py-1" href="{% url 'accounts:user_register' %}">ثبت‌نام</a></li>
+          <li class="nav-item"><a class="nav-link px-2 py-1" href="{% url 'accounts:user_login' %}">ورود</a></li>
+        {% endif %}
+      </ul>
+    </div>
+
+    <!-- پکِ چپِ چسبیده: سبد خرید + اکانت‌ها (دسکتاپ) -->
+    <div class="d-none d-lg-flex align-items-center gap-1 order-lg-3" style="margin-left:0; margin-right:auto;">
+      <a href="{% url 'orders:cart' %}"
+         class="btn btn-light btn-sm btn-cart position-relative px-2 py-1 rounded-pill" aria-label="سبد خرید">
+        🛒
+        {% if cart and cart|length > 0 %}
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-maroon">
+            {{ cart|length }}
+          </span>
+        {% endif %}
+      </a>
+
+      {% if request.user.is_authenticated %}
+        <a class="nav-link px-2 py-1" href="{% url 'accounts:user_logout' %}">خروج</a>
+      {% else %}
+        <a class="nav-link px-2 py-1" href="{% url 'accounts:user_register' %}">ثبت‌نام</a>
+        <a class="nav-link px-2 py-1" href="{% url 'accounts:user_login' %}">ورود</a>
+      {% endif %}
+    </div>
+
+  </div>
+</nav>

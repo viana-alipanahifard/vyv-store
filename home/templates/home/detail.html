@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ product.name }} | vviiaannaa’s shop{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* از متغیرهای پالت در base.html: --ink, --sand, --rose, --wine */
+  .product-wrap{
+    background: linear-gradient(135deg, var(--sand), #fff);
+    border-radius: 1.25rem;
+    border: 1px solid rgba(0,0,0,.06);
+    box-shadow: 0 14px 34px rgba(126,0,0,.08);
+    padding: 1rem;
+  }
+  .product-wrap::before{
+    content:"";
+    display:block;
+    height:4px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, var(--wine), var(--rose), var(--sand));
+    margin-bottom: .75rem;
+  }
+  .media-box{
+    background:#fff;
+    border:1px solid rgba(0,0,0,.06);
+    border-radius:1rem;
+    padding:1rem;
+  }
+  .title-wine{ color: var(--wine); }
+
+  .meta{
+    color:#6c757d;
+    font-weight:600;
+  }
+
+  .price-tag{
+    color: var(--wine);
+    font-weight:900;
+    font-size: clamp(1.35rem, 1.2vw + 1.05rem, 2rem);
+    letter-spacing:.2px;
+  }
+  .price-tag .unit{
+    font-weight:600;
+    font-size:.95rem;
+    color:#6c757d;
+    margin-right:.35rem;
+  }
+
+  .desc{
+    line-height:1.9;
+    color:#495057;
+  }
+
+  .buy-panel{
+    background: rgba(255,255,255,.75);
+    border:1px dashed rgba(126,0,0,.25);
+    border-radius:1rem;
+  }
+
+  .qty input, .qty select{
+    min-width: 110px;
+    border-radius:.75rem;
+    border:1px solid rgba(0,0,0,.12);
+    padding:.55rem .75rem;
+    background:#fff;
+  }
+
+  .buy-btn{
+    border-radius:.95rem;
+    padding:.8rem 1rem;
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .buy-btn:hover{
+    transform: translateY(-1px);
+    box-shadow:0 12px 24px rgba(126,0,0,.14);
+  }
+
+  .soft-chip{
+    background: rgba(126,0,0,.08);
+    color: var(--wine);
+    border:1px solid rgba(126,0,0,.15);
+    border-radius:999px;
+    padding:.28rem .7rem;
+    font-size:.85rem;
+  }
+
+  .line{
+    height:1px;
+    background: linear-gradient(90deg, rgba(126,0,0,.25), rgba(0,0,0,0));
+    margin: .75rem 0 1rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-4 my-md-5">
+
+  <div class="product-wrap">
+    <div class="row g-4 align-items-start">
+
+      <!-- تصویر محصول -->
+      <div class="col-12 col-lg-6">
+        <div class="media-box text-center">
+          {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid rounded">
+          {% else %}
+            <img src="{% static 'img/placeholder.png' %}" alt="{{ product.name }}" class="img-fluid rounded">
+          {% endif %}
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-3">
+          <button type="button" class="btn btn-outline-primary btn-sm" onclick="history.back()">بازگشت</button>
+          {% if product.category %}
+            <span class="soft-chip">{{ product.category.name }}</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- جزئیات و فرم خرید -->
+      <div class="col-12 col-lg-6">
+        <h1 class="h4 fw-bold mb-2 title-wine">{{ product.name }}</h1>
+
+        <div class="meta mb-2">تاریخ ثبت: {{ product.created|date:"Y/m/d" }}</div>
+
+        <div class="price-tag mb-3">
+          {{ product.price }} <span class="unit">تومان</span>
+        </div>
+
+        {% if product.description %}
+          <div class="line"></div>
+          <p class="desc">{{ product.description }}</p>
+        {% endif %}
+
+        <div class="buy-panel p-3 mt-4">
+          <form action="{% url 'orders:cart_add' product.id %}" method="post" class="d-grid gap-3">
+            {% csrf_token %}
+            <div class="d-flex align-items-center gap-3">
+              <label for="id_quantity" class="fw-semibold">تعداد</label>
+              <div class="qty">
+                {{ form.quantity }}
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary buy-btn w-100">
+              افزودن به سبد خرید
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock content %}

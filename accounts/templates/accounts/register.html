@@ -1,0 +1,108 @@
+
+{% extends "base.html" %}
+{% load l10n %}
+
+{% block title %}ثبت‌نام | vVyana's shop{% endblock %}
+
+{% block extra_css %}
+<style>
+  :root{ --maroon:#611C1C; --rose:#B08D83; --peach:#FFE8E0; }
+  .auth-wrap{
+    background: linear-gradient(135deg, var(--peach), #fff);
+    border:1px solid rgba(97,28,28,.15);
+    border-radius:1.25rem; box-shadow:0 14px 34px rgba(97,28,28,.10);
+    padding:1.25rem; max-width:560px;
+  }
+  .auth-wrap::before{
+    content:""; display:block; height:4px; border-radius:10px;
+    background: linear-gradient(90deg, var(--maroon), var(--rose), var(--peach));
+    margin-bottom:.75rem;
+  }
+  .form-row{ margin-bottom: .9rem; }
+  .form-label{ font-weight:600; color:#58372D; margin-bottom:.35rem; }
+  /* بدون وابستگی به Bootstrap کلاس، خودمون فرم‌استایل می‌دیم */
+  .auth-wrap input, .auth-wrap select, .auth-wrap textarea{
+    display:block; width:100%;
+    border:1px solid rgba(97,28,28,.25);
+    border-radius:.7rem; padding:.6rem .8rem;
+    outline:0; background:#fff;
+  }
+  .auth-wrap input:focus{
+    border-color: var(--maroon);
+    box-shadow:0 0 0 .2rem rgba(97,28,28,.12);
+  }
+  .errorlist{ margin:.35rem 0 0; padding:0; list-style:none; }
+  .errorlist li{
+    color:#b3261e; background:#fdecea; border:1px solid #f5c2c7;
+    border-radius:.5rem; padding:.35rem .6rem; font-size:.85rem; display:inline-block;
+  }
+  .btn-maroon{
+    --bs-btn-bg: var(--maroon); --bs-btn-border-color: var(--maroon);
+    --bs-btn-hover-bg:#4e1616; --bs-btn-hover-border-color:#4e1616; --bs-btn-color:#fff;
+    border-radius:.9rem; padding:.7rem 1rem;
+  }
+  /* موبایل همیشه LTR و چپ‌چین */
+  input[name="phone"], input[name="phone_number"], input[type="tel"]{ direction:ltr; text-align:left; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-4 my-md-5 d-flex justify-content-center">
+  <div class="auth-wrap w-100">
+    <h1 class="h5 fw-bold mb-3" style="color:var(--maroon)">ثبت‌نام</h1>
+
+    <form action="" method="post" novalidate>
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+      {% endif %}
+
+      <div class="form-row">
+        <label class="form-label" for="{{ form.full_name.id_for_label }}">نام و نام خانوادگی</label>
+        {{ form.full_name }}
+        {{ form.full_name.errors }}
+      </div>
+
+      <div class="form-row">
+        <label class="form-label" for="{{ form.email.id_for_label }}">ایمیل</label>
+        {{ form.email }}
+        {{ form.email.errors }}
+      </div>
+
+      {% with phone_field=form.phone_number|default:form.phone %}
+        <div class="form-row">
+          <label class="form-label" for="{{ phone_field.id_for_label }}">شماره موبایل</label>
+          {{ phone_field }}
+          {{ phone_field.errors }}
+        </div>
+      {% endwith %}
+
+      <div class="form-row">
+        <label class="form-label" for="{{ form.password.id_for_label }}">رمز عبور</label>
+        <div class="input-group" style="display:flex; gap:.5rem;">
+          {{ form.password }}
+        </div>
+        {{ form.password.errors }}
+      </div>
+
+      <button type="submit" class="btn btn-maroon w-100">ارسال</button>
+    </form>
+  </div>
+</div>
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // تنظیم ویژگی‌های فیلد موبایل بدون دست‌زدن به فرم پایتون
+    const phone = document.querySelector('input[name="phone_number"], input[name="phone"]');
+    if (phone){
+      phone.dir = 'ltr'; phone.inputMode = 'tel';
+      phone.autocomplete = 'tel'; phone.maxLength = 11;
+      if (!phone.placeholder) phone.placeholder = '09xxxxxxxxx';
+      phone.setAttribute('pattern','09\\d{9}');
+    }
+  });
+</script>
+{% endblock %}
+{% endblock content %}

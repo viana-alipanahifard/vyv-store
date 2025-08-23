@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}سفارش ثبت شد | vVyana's shop{% endblock %}
+
+{% block extra_css %}
+<style>
+  :root{ --maroon:#611C1C; --rose:#B08D83; --peach:#FFE8E0; }
+  .success-wrap{
+    background: linear-gradient(135deg, var(--peach), #fff);
+    border:1px solid rgba(97,28,28,.15);
+    border-radius:1.25rem;
+    box-shadow:0 14px 34px rgba(97,28,28,.10);
+    padding:1.25rem;
+    max-width:640px;
+  }
+  .success-wrap::before{
+    content:""; display:block; height:4px; border-radius:10px;
+    background: linear-gradient(90deg, var(--maroon), var(--rose), var(--peach));
+    margin-bottom:.75rem;
+  }
+  .heading{ color:var(--maroon); }
+  .badge-soft{
+    background: rgba(97,28,28,.08);
+    color: var(--maroon);
+    border: 1px solid rgba(97,28,28,.15);
+    border-radius: 999px;
+    padding: .25rem .6rem;
+    font-size:.85rem;
+  }
+  .price-row{
+    display:flex; justify-content:space-between; align-items:center;
+    border-top:1px solid rgba(97,28,28,.12);
+    padding-top:.75rem; margin-top:.5rem;
+  }
+  .price-row .label{ color:#58372D; font-weight:600; }
+  .total{
+    color:var(--maroon); font-weight:900; letter-spacing:.2px;
+    font-size:1.1rem;
+  }
+  .unit{ color:#6c757d; font-weight:600; font-size:.95rem; margin-right:.25rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-4 my-md-5 d-flex justify-content-center">
+  <div class="success-wrap w-100 text-center">
+    <h1 class="h5 fw-bold heading mb-2">سفارش شما با موفقیت ثبت شد</h1>
+
+    <div class="d-flex justify-content-center gap-3 mb-3">
+      <span class="badge-soft">شماره فاکتور: {{ order.id }}</span>
+    </div>
+
+    <div class="price-row">
+      <span class="label">مبلغ نهایی پرداخت شده</span>
+      <span class="total">
+        {{ order.get_total_price|floatformat:0 }} <span class="unit">تومان</span>
+      </span>
+    </div>
+
+    <div class="d-grid gap-2 mt-3">
+      <a href="{% url 'home:home' %}" class="btn btn-primary btn-lg">بازگشت به صفحهٔ اصلی</a>
+    </div>
+  </div>
+</div>
+{% endblock content %}

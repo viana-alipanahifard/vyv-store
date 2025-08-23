@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block title %}باکت فایل‌ها | vVyana{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* همون پالت */
+  :root{
+    --maroon: #611C1C;
+    --coffee: #58372D;
+    --blush:  #B08D83;
+    --peach:  #FFE8E0;
+  }
+  .bucket-wrap{
+    background: linear-gradient(135deg, var(--peach), #fff);
+    border: 1px solid rgba(97,28,28,.15);
+    border-radius: 1.25rem;
+    box-shadow: 0 14px 34px rgba(97,28,28,.10);
+    padding: 1rem;
+  }
+  .bucket-wrap::before{
+    content:"";
+    display:block;
+    height:4px;
+    border-radius:10px;
+    background: linear-gradient(90deg, var(--maroon), var(--blush), var(--peach));
+    margin-bottom:.75rem;
+  }
+  .chip{
+    background: rgba(97,28,28,.08);
+    color: var(--maroon);
+    border: 1px solid rgba(97,28,28,.15);
+    border-radius: 999px;
+    padding: .25rem .7rem;
+    font-size: .85rem;
+  }
+
+  /* جدول */
+  .table thead th{
+    background: var(--maroon);
+    color:#fff;
+    border:0;
+    white-space: nowrap;
+  }
+  .table tbody tr:hover{ background: rgba(97,28,28,.06); }
+  .file-name{ max-width: 520px; }
+  @media (max-width: 576px){
+    .file-name{ max-width: 200px; }
+  }
+
+  /* دکمه‌ها */
+  .btn-outline-maroon{
+    --bs-btn-color: var(--maroon);
+    --bs-btn-border-color: var(--maroon);
+    --bs-btn-hover-bg: var(--maroon);
+    --bs-btn-hover-border-color: var(--maroon);
+    --bs-btn-hover-color: #fff;
+  }
+  .btn-maroon{
+    --bs-btn-bg: var(--maroon);
+    --bs-btn-border-color: var(--maroon);
+    --bs-btn-hover-bg: #4e1616;
+    --bs-btn-hover-border-color: #4e1616;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-4 my-md-5">
+  <div class="bucket-wrap">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h1 class="h5 fw-bold m-0" style="color: var(--maroon);">فایل‌های باکت</h1>
+      <span class="chip">تعداد: {{ objects|length }}</span>
+    </div>
+
+    {% if objects %}
+      <div class="table-responsive">
+        <table class="table align-middle mb-0">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">نام</th>
+              <th scope="col">حجم</th>
+              <th scope="col" class="text-center">دانلود</th>
+              <th scope="col" class="text-center">حذف</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for obj in objects %}
+              <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td class="file-name text-break">{{ obj.Key }}</td>
+                <td>{{ obj.Size|filesizeformat }}</td>
+                <td class="text-center">
+                  <a href="{% url 'home:download_obj_bucket' obj.Key %}" class="btn btn-outline-maroon btn-sm px-3">دانلود</a>
+                </td>
+                <td class="text-center">
+                  <a href="{% url 'home:delete_obj_bucket' obj.Key %}" class="btn btn-maroon btn-sm px-3"
+                     onclick="return confirm('حذف این فایل؟');">حذف</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="alert alert-light border text-center m-0">
+        فایلی موجود نیست.
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

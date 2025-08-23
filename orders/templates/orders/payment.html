@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}پرداخت سفارش | vVyana's shop{% endblock %}
+
+{% block extra_css %}
+<style>
+  :root{
+    --maroon:#611C1C; --rose:#B08D83; --peach:#FFE8E0;
+  }
+  .checkout-wrap{
+    background: linear-gradient(135deg, var(--peach), #fff);
+    border:1px solid rgba(97,28,28,.15);
+    border-radius:1.25rem;
+    box-shadow:0 14px 34px rgba(97,28,28,.10);
+    padding:1.25rem;
+    max-width:640px;
+  }
+  .checkout-wrap::before{
+    content:""; display:block; height:4px; border-radius:10px;
+    background: linear-gradient(90deg, var(--maroon), var(--rose), var(--peach));
+    margin-bottom:.75rem;
+  }
+  .badge-soft{
+    background: rgba(97,28,28,.08);
+    color: var(--maroon);
+    border: 1px solid rgba(97,28,28,.15);
+    border-radius: 999px;
+    padding: .25rem .6rem;
+    font-size:.85rem;
+  }
+  .price-row{ display:flex; justify-content:space-between; align-items:center; margin:.25rem 0; }
+  .price-row .label{ color:#58372D; font-weight:600; }
+  .total{
+    color: var(--maroon);
+    font-weight:900;
+    font-size:1.15rem;
+    letter-spacing:.2px;
+  }
+
+  .btn-maroon{
+    --bs-btn-bg: var(--maroon);
+    --bs-btn-border-color: var(--maroon);
+    --bs-btn-hover-bg:#4e1616;
+    --bs-btn-hover-border-color:#4e1616;
+    --bs-btn-color:#fff;
+    border-radius:.9rem;
+  }
+  .btn-outline-maroon{
+    --bs-btn-color: var(--maroon);
+    --bs-btn-border-color: var(--maroon);
+    --bs-btn-hover-bg: var(--maroon);
+    --bs-btn-hover-border-color: var(--maroon);
+    --bs-btn-hover-color:#fff;
+    border-radius:.9rem;
+  }
+
+  .input-group .form-control{ border-radius:.8rem 0 0 .8rem; }
+  .input-group .btn{ border-radius:0 .8rem .8rem 0; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-4 my-md-5 d-flex justify-content-center">
+  <div class="checkout-wrap w-100">
+    {% include 'inc/messages.html' %}
+
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h1 class="h5 fw-bold m-0" style="color:var(--maroon);">پیش فاکتور </h1>
+      <span class="badge-soft">شماره سفارش: {{ order.id }}</span>
+    </div>
+
+    <div class="mb-3">
+      <div class="price-row">
+        <span class="label">مبلغ نهایی</span>
+        <span class="total">
+          {{ order.get_total_price }} <span class="text-muted fw-semibold" style="font-size:.95rem;">تومان</span>
+        </span>
+      </div>
+      {% if order.discount %}
+      <div class="price-row">
+        <span class="label">تخفیف</span>
+        <span class="badge-soft">{{ order.discount }}%</span>
+      </div>
+      {% endif %}
+    </div>
+
+    <form action="{% url 'orders:apply_coupon' order.id %}" method="post" class="mb-3" novalidate>
+      {% csrf_token %}
+      <label for="coupon" class="form-label fw-semibold">کد تخفیف</label>
+      <div class="input-group">
+        <input id="coupon" type="text" name="code" class="form-control" placeholder="کد را وارد کنید" required>
+        <button type="submit" class="btn btn-outline-maroon">اعمال</button>
+      </div>
+    </form>
+
+    <div class="d-grid gap-2">
+      <a href="{% url 'orders:order_pay' order.id %}" class="btn btn-maroon ">درگاه پرداخت</a>
+      <a href="{% url 'orders:cart' %}" class="btn btn-outline-maroon">بازگشت به سبد خرید</a>
+    </div>
+  </div>
+</div>
+{% endblock content %}
