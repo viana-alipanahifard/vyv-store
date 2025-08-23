@@ -54,7 +54,3 @@ AWS_STORAGE_BUCKET_NAME={{bucket}}
 AWS_S3_REGION_NAME=ir-any
 AWS_S3_ENDPOINT_URL=https://s3.ir-thr-at1.arvanstorage.com
 AWS_S3_CUSTOM_DOMAIN=
-<img width="1512" height="982" alt="مشخصات نهایی-" src="https://github.com/user-attachments/assets/939cf8e1-9fc4-40c3-bb3e-cbf9fb22f828" />
-<img width="1512" height="982" alt="باکت ها" src="https://github.com/user-attachments/assets/ec30a814-7043-4b97-a01c-243b4d67fd75" />
-<img width="1512" height="982" alt="صفحه ی ثبت نام (رجیستر" src="https://github.com/user-attachments/assets/a3902a26-9190-4ac6-a2d8-75acf7b9b645" />
-<img width="1512" height="982" alt="صفحه ی ثبت نام (رجیستر" src="https://github.com/user-attachments/assets/c5748f7f-66dc-46b9-bc89-d4d22d52b4c2" />
