@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-^=-%vklxkvjwua7iml^34#_=h5qt02c_&hn+2eb@-1y!3l%i#w'
+SECRET_KEY = ''
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG =True
@@ -87,8 +87,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
-        'USER': 'viana',
-        'PASSWORD':'viana',
+        'USER': '*',
+        'PASSWORD':'*',
         'HOST': '127.0.0.1',
         'PORT':  '5432',
         "OPTIONS": {"options": "-c search_path=store,public"},
@@ -146,10 +146,6 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS=[
     BASE_DIR / 'static',
 ]
-# STATIC_ROOT=BASE_DIR /"static"
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -157,93 +153,14 @@ AUTH_USER_MODEL='accounts.User'
 
 
 AWS_SERVICE_NAME = "s3"
-# AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID", "1f1d643d-3a7f-4b93-9430-a1c02279d3ff")
-# AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY", "d0693130c7f74ae30c99bc7287478feed1add4716ccc54f991ef55e8f7a43f94")
-# AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME", "vviiaannaamedias")
-
-# # اندپوینت API درست آروان: .ir (نه .com) + region درست
-# AWS_S3_REGION_NAME = os.getenv("AWS_S3_REGION_NAME", "ir-thr-at1")
-# AWS_S3_ENDPOINT_URL = os.getenv(
-#     "AWS_S3_ENDPOINT_URL",
-#     f"https://s3.{AWS_S3_REGION_NAME}.arvanstorage.ir"
-# )
-
-# # گزینه‌های مهم برای سازگاری
-# AWS_S3_SIGNATURE_VERSION = "s3v4"
-# AWS_S3_ADDRESSING_STYLE = "path"
-# AWS_S3_FILE_OVERWRITE = False
-# AWS_DEFAULT_ACL = None
-# AWS_QUERYSTRING_AUTH = False  # اگر فایل‌ها عمومی‌اند
-
-# # دامین پیش‌فرض فایل‌ها (بدون نیاز به CDN)
-# AWS_S3_CUSTOM_DOMAIN = os.getenv(
-#     "AWS_S3_CUSTOM_DOMAIN",
-#     f"{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.arvanstorage.ir"
-# )
-
-# STORAGES = {
-#     "default": {
-#         "BACKEND": "storages.backends.s3.S3Storage",   # اگر ورژن قدیمیه، بذار: "storages.backends.s3boto3.S3Boto3Storage"
-#         "OPTIONS": {
-#             "bucket_name": AWS_STORAGE_BUCKET_NAME,
-#             "endpoint_url": AWS_S3_ENDPOINT_URL,
-#             "region_name": AWS_S3_REGION_NAME,
-#             "signature_version": AWS_S3_SIGNATURE_VERSION,
-#             "addressing_style": AWS_S3_ADDRESSING_STYLE,
-#             "file_overwrite": AWS_S3_FILE_OVERWRITE,
-#             "default_acl": AWS_DEFAULT_ACL,
-#             "custom_domain": AWS_S3_CUSTOM_DOMAIN,
-#         },
-#     },
-#         "staticfiles": {
-#         # استاتیک‌ها رو محلی نگه دار (برای DEBUG=True عالیه)
-#         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
-#     },
-
-# }
-# MEDIA روی Arvan
-AWS_ACCESS_KEY_ID = "1f1d643d-3a7f-4b93-9430-a1c02279d3ff"
-AWS_SECRET_ACCESS_KEY = "d0693130c7f74ae30c99bc7287478feed1add4716ccc54f991ef55e8f7a43f94"
-AWS_STORAGE_BUCKET_NAME = "vviiaannaamedias"
-
+AWS_ACCESS_KEY_ID = "*"
+AWS_SECRET_ACCESS_KEY = "*"
+AWS_STORAGE_BUCKET_NAME = "*"
 AWS_S3_REGION_NAME  = "ir-thr-at1"
 AWS_S3_ENDPOINT_URL = "https://s3.ir-thr-at1.arvanstorage.ir"
-AWS_S3_SIGNATURE_VERSION = "s3v4"
-AWS_S3_ADDRESSING_STYLE  = "path"
 AWS_S3_FILE_OVERWRITE    = False
-AWS_DEFAULT_ACL          = None
-AWS_QUERYSTRING_AUTH     = False
 
-from pathlib import Path
-AWS_LOCAL_STORAGE_DIR = Path(BASE_DIR) / "aws"
-AWS_LOCAL_STORAGE_DIR.mkdir(parents=True, exist_ok=True)  # فولدر رو بساز، اگر نیست
-AWS_LOCAL_STORAGE = str(AWS_LOCAL_STORAGE_DIR) + "/"
-
-# موقتاً حذفش کن تا مطمئن شیم URLها درست ساخته می‌شن
-AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.ir-thr-at1.arvanstorage.ir"
-
-STORAGES = {
-    "default": {
-        "BACKEND": "storages.backends.s3.S3Storage",
-        "OPTIONS": {
-            "bucket_name": AWS_STORAGE_BUCKET_NAME,
-            "endpoint_url": AWS_S3_ENDPOINT_URL,
-            "region_name": AWS_S3_REGION_NAME,
-            "signature_version": AWS_S3_SIGNATURE_VERSION,
-            "addressing_style": AWS_S3_ADDRESSING_STYLE,
-            "file_overwrite": AWS_S3_FILE_OVERWRITE,
-            "default_acl": AWS_DEFAULT_ACL,
-            # "custom_domain": AWS_S3_CUSTOM_DOMAIN,  # فعلاً خاموش
-        },
-    },
     "staticfiles": {
         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
 }
-
-# MEDIA_URL را نذار. django-storages خودش می‌سازه براساس endpoint.
-
-# MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
-
-
-APPEND_SLASH = False
