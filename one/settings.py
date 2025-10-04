@@ -157,7 +157,7 @@ AWS_ACCESS_KEY_ID = "*"
 AWS_SECRET_ACCESS_KEY = "*"
 AWS_STORAGE_BUCKET_NAME = "*"
 AWS_S3_REGION_NAME  = "ir-thr-at1"
-AWS_S3_ENDPOINT_URL = "https://s3.ir-thr-at1.arvanstorage.ir"
+AWS_S3_ENDPOINT_URL = "https://s3.ir-thr-at1.arvanstorage.com"
 AWS_S3_FILE_OVERWRITE    = False
 
     "staticfiles": {
